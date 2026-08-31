@@ -1,8 +1,8 @@
-export default function AboutPage() {
-  return (
-    <main>
-      <h1>เกี่ยวกับเรา</h1>
-      <p>ศูนย์รวมข้อมูลรายวิชาและคอร์สเรียนสำหรับทุกคน</p>
-    </main>
-  );
-}
+export default function AboutPage(){
+    return(
+        <div>
+            <h1>เกี่ยวกับเรา</h1>
+            <p>เว็ปไซต์นี้เป็นเว็ปสำหรับนักศึกษาในการลงทะเบียนเรียนและดูข้อมูลวิชา</p>
+        </div>
+    )
+}       

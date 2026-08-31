@@ -1,8 +1,9 @@
-export default function HomePage() {
-  const siteName: string = "Student Course Hub";
-  const courseCount: number = 3;
-  const isOpen: boolean = true;
+import Image from "next/image";
 
+export default function Home() {
+  
+  const siteName: string = "Student Course Hub";
+  const isOpen: boolean = true;
   const topics: string[] = [
     "HTML",
     "CSS",
@@ -35,11 +36,22 @@ export default function HomePage() {
     },
   ];
 
+  
   return (
-    <main>
+    <main className="page">
       <h1>{siteName}</h1>
-      <p>จำนวนรายวิชา: {courseCount}</p>
-      <p>สถานะระบบ: {isOpen ? "เปิดใช้งาน" : "ปิดใช้งาน"}</p>
+
+      <p>จำนวนรายวิชา: {courses.length}</p>
+
+      <p>
+        สถานะระบบ: {isOpen ? "เปิดใช้งาน" : "ปิดใช้งาน"}
+        
+      </p>
+
+      <br/>
+      <h2>
+        <strong>หัวข้อที่เรียน</strong>
+      </h2>
 
       <ul>
         {topics.map((topic) => (
@@ -51,10 +63,16 @@ export default function HomePage() {
         {courses.map((course) => (
           <article key={course.id} className="courseCard">
             <h2>{course.title}</h2>
-            <p>รหัสวิชา: {course.code}</p>
+            <br/>
+            <p><strong>รหัสวิชา: </strong>{course.code}</p>
+
             <p>{course.credits} หน่วยกิต</p>
-            <p>
-              {course.isOpen ? "เปิดลงทะเบียน" : "ปิดลงทะเบียน"}
+
+            {/* เพิ่มส่วน Style กำหนดสีที่ตรงนี้ครับ */}
+            <p style={{ color: course.isOpen ? "green" : "red", fontWeight: "bold" }}>
+              {course.isOpen
+                ? "เปิดลงทะเบียน"
+                : "ปิดลงทะเบียน"}
             </p>
           </article>
         ))}
