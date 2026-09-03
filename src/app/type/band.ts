@@ -1,6 +1,7 @@
 export type Member = {
   name: string;
   role: string;
+  imageUrl: string;
 };
 
 export type Band = {
