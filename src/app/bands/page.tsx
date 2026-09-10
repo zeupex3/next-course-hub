@@ -1,4 +1,4 @@
-import BandExplorer from "../components/BandExplorer.tsx";
+import BandExplorer from "../components/BandExplorer";
 import { bands } from "../data/bandData";
 
 export const metadata = {
