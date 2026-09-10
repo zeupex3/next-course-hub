@@ -9,5 +9,5 @@ export type Band = {
   name: string;
   genre: string;
   imageUrl: string;
-  members: Member[];
+  formedYear?: number;
 };
