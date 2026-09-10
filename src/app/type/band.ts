@@ -8,6 +8,6 @@ export type Band = {
   id: number;
   name: string;
   genre: string;
+  formedYear: number;
   imageUrl: string;
-  formedYear?: number;
-};
+  members: Member[];
