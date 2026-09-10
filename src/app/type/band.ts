@@ -1,7 +1,7 @@
 export type Member = {
   name: string;
   role: string;
-  imageUrl: string;
+  imageUrl?: string;
 };
 
 export type Band = {
@@ -11,3 +11,4 @@ export type Band = {
   formedYear: number;
   imageUrl: string;
   members: Member[];
+};
