@@ -7,7 +7,7 @@ const navLinks = [
   { href: "/", label: "หน้าแรก" },
   { href: "/courses", label: "รายวิชา" },
   { href: "/bands", label: "วงดนตรีโปรด" },
-  { href: "/game", label: "เกม" },
+  { href: "/games", label: "เกม" },
   { href: "/about", label: "เกี่ยวกับ" },
 ];
 
