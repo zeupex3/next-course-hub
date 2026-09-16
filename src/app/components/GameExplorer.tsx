@@ -14,7 +14,7 @@ const statusStyles: Record<
   { label: string; badge: string; dot: string; activeBtn: string }
 > = {
   "not-started": {
-    label: "ยังไม่เริ่ม",
+    label: "ยังไม่ได้เล่น",
     badge: "bg-amber-500/10 text-amber-400 border-amber-500/30",
     dot: "bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.6)]",
     activeBtn: "bg-amber-500/20 text-amber-300 border-amber-500/50",
@@ -99,12 +99,8 @@ export default function GameExplorer({ initialGames = [] }: GameExplorerProps) {
     <div className="max-w-5xl mx-auto px-4 py-8 space-y-10">
       <section className="relative p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-blue-900/60 via-slate-900 to-indigo-950/80 border border-blue-500/30 backdrop-blur-md flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xl">
         <div className="space-y-2">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-semibold text-blue-400 tracking-wider uppercase bg-blue-500/10 border border-blue-500/20">
-            <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
-            Backlog Summary
-          </div>
           <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-            เวลาสำหรับเกมที่ยังไม่เริ่มเล่น
+            จำนวนเวลาที่ต้องใช้เล่น
           </h2>
         </div>
         <div className="text-left sm:text-right">
@@ -169,7 +165,7 @@ export default function GameExplorer({ initialGames = [] }: GameExplorerProps) {
           className="px-4 py-3 rounded-2xl bg-slate-900/90 border border-slate-800 text-slate-100 text-sm focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 cursor-pointer"
         >
           <option value="all">สถานะทั้งหมด</option>
-          <option value="not-started">ยังไม่เริ่ม</option>
+          <option value="not-started">ยังไม่ได้เล่น</option>
           <option value="in-progress">กำลังเล่น</option>
           <option value="completed">เล่นจบแล้ว</option>
         </select>
@@ -210,7 +206,7 @@ export default function GameExplorer({ initialGames = [] }: GameExplorerProps) {
                   <span className="font-mono bg-blue-950/70 border border-blue-900/50 px-2.5 py-1 rounded-md text-blue-300">
                     {game.platform}
                   </span>
-                  <span>⏱ ประมาณ {game.estimatedHours} ชั่วโมง</span>
+                  <span>{game.estimatedHours} ชั่วโมง ⏱ </span>
                 </div>
               </div>
               <div className="flex flex-wrap items-center gap-3 self-start lg:self-center">

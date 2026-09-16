@@ -41,7 +41,7 @@ function validate(value: CourseDraft): FormErrors {
   if (value.name.trim() === "") nextErrors.name = "กรุณาระบุชื่อวิชา";
   const credit = Number(value.credit);
   if (!Number.isInteger(credit) || credit < 1 || credit > 6) {
-    nextErrors.credit = "หน่วยกิตต้องเป็นจำนวนเต็มตั้งแต่ 1 ถึง 6";
+    nextErrors.credit = "หน่วยกิตต้องเป็น 1 ขึ้นไป";
   }
   return nextErrors;
 }

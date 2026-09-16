@@ -9,7 +9,7 @@ type GamePageProps = {
 
 const statusConfig = {
   "not-started": {
-    label: "ยังไม่เริ่ม",
+    label: "ยังไม่ได้เล่น",
     color: "bg-slate-500/10 text-slate-400 border-slate-700/50",
     dot: "bg-slate-400",
   },

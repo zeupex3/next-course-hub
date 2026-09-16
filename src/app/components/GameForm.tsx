@@ -33,7 +33,7 @@ const statusOptions: {
 }[] = [
   {
     value: "not-started",
-    label: "ยังไม่เริ่ม",
+    label: "ยังไม่ได้เล่น",
     dotColor: "bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.6)]",
     activeClass:
       "border-amber-500/50 bg-amber-500/10 text-amber-300 shadow-md shadow-amber-500/10",
@@ -70,7 +70,7 @@ function validate(draft: GameDraft): GameFormErrors {
   if (draft.platform === "") errors.platform = "กรุณาเลือกแพลตฟอร์ม";
   const hours = Number(draft.estimatedHours);
   if (!Number.isInteger(hours) || hours <= 0) {
-    errors.estimatedHours = "จำนวนชั่วโมงต้องเป็นจำนวนเต็มบวก (มากกว่า 0)";
+    errors.estimatedHours = "จำนวนชั่วโมงต้องมากกว่า 0";
   }
   return errors;
 }
