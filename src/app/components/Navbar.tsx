@@ -24,6 +24,11 @@ export default function Navbar() {
             เกี่ยวกับ
           </Link>
         </li>
+        <li>
+          <Link className="navLink" href="/game">
+            เกม
+          </Link>
+        </li>
       </ul>
     </nav>
   );
