@@ -6,13 +6,31 @@ import type { Game, GameStatus, Platform } from "../type/game";
 import GameForm, { type GameDraft } from "./GameForm";
 
 type GameExplorerProps = {
-  initialGames: Game[];
+  initialGames?: Game[];
 };
 
-const statusLabels: Record<GameStatus, string> = {
-  "not-started": "ยังไม่เริ่ม",
-  "in-progress": "กำลังเล่น",
-  completed: "เล่นจบแล้ว",
+const statusStyles: Record<
+  GameStatus,
+  { label: string; badge: string; dot: string; activeBtn: string }
+> = {
+  "not-started": {
+    label: "ยังไม่เริ่ม",
+    badge: "bg-amber-500/10 text-amber-400 border-amber-500/30",
+    dot: "bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.6)]",
+    activeBtn: "bg-amber-500/20 text-amber-300 border-amber-500/50",
+  },
+  "in-progress": {
+    label: "กำลังเล่น",
+    badge: "bg-blue-500/10 text-blue-400 border-blue-500/30",
+    dot: "bg-blue-400 shadow-[0_0_8px_rgba(96,165,250,0.6)]",
+    activeBtn: "bg-blue-500/20 text-blue-300 border-blue-500/50",
+  },
+  completed: {
+    label: "เล่นจบแล้ว",
+    badge: "bg-emerald-500/10 text-emerald-400 border-emerald-500/30",
+    dot: "bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.6)]",
+    activeBtn: "bg-emerald-500/20 text-emerald-300 border-emerald-500/50",
+  },
 };
 
 export default function GameExplorer({ initialGames = [] }: GameExplorerProps) {
@@ -22,7 +40,6 @@ export default function GameExplorer({ initialGames = [] }: GameExplorerProps) {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
 
-  // Derived State: คำนวณชั่วโมงรวมเฉพาะเกมที่ "ยังไม่เริ่ม"
   const totalUnstartedHours = games
     .filter((g) => g.status === "not-started")
     .reduce((sum, g) => sum + g.estimatedHours, 0);
@@ -55,12 +72,10 @@ export default function GameExplorer({ initialGames = [] }: GameExplorerProps) {
     }
   }
 
-  // ลัดขั้นตอน: เปลี่ยนสถานะได้โดยตรง
   function handleQuickStatusChange(id: string, newStatus: GameStatus) {
     setGames(games.map((g) => (g.id === id ? { ...g, status: newStatus } : g)));
   }
 
-  // ดำเนินการลบเมื่อยืนยัน
   function handleExecuteDelete() {
     if (confirmDeleteId) {
       setGames(games.filter((g) => g.id !== confirmDeleteId));
@@ -71,7 +86,6 @@ export default function GameExplorer({ initialGames = [] }: GameExplorerProps) {
 
   const editingGame = games.find((g) => g.id === editingId);
 
-  // กรองทั้งจากคำค้นและสถานะ
   const visibleGames = games.filter((game) => {
     const matchesKeyword = game.title
       .toLowerCase()
@@ -82,31 +96,34 @@ export default function GameExplorer({ initialGames = [] }: GameExplorerProps) {
   });
 
   return (
-    <div style={{ maxWidth: "800px", margin: "0 auto", padding: "16px" }}>
-      {/* ส่วนสรุปเวลา Derived State */}
-      <section
-        style={{
-          background: "#f0fdf4",
-          border: "1px solid #bbf7d0",
-          padding: "12px",
-          borderRadius: "8px",
-          marginBottom: "20px",
-        }}
-      >
-        <strong>เวลาที่ต้องใช้สำหรับเกมที่ยังไม่เริ่มทั้งหมด:</strong>{" "}
-        {totalUnstartedHours} ชั่วโมง
+    <div className="max-w-5xl mx-auto px-4 py-8 space-y-10">
+      <section className="relative p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-blue-900/60 via-slate-900 to-indigo-950/80 border border-blue-500/30 backdrop-blur-md flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xl">
+        <div className="space-y-2">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-semibold text-blue-400 tracking-wider uppercase bg-blue-500/10 border border-blue-500/20">
+            <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
+            Backlog Summary
+          </div>
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+            เวลาสำหรับเกมที่ยังไม่เริ่มเล่น
+          </h2>
+        </div>
+        <div className="text-left sm:text-right">
+          <span className="text-4xl sm:text-5xl font-black text-blue-400">
+            {totalUnstartedHours}
+          </span>
+          <span className="text-slate-400 text-sm ml-2 font-medium">
+            ชั่วโมง
+          </span>
+        </div>
       </section>
 
-      {/* ฟอร์ม */}
-      <section
-        style={{
-          border: "1px solid #ccc",
-          padding: "16px",
-          borderRadius: "8px",
-          marginBottom: "24px",
-        }}
-      >
-        <h2>{editingGame ? "แก้ไขรายการเกม" : "เพิ่มเกมใหม่"}</h2>
+      <section className="p-6 sm:p-8 rounded-3xl bg-slate-900/80 border border-slate-800 backdrop-blur-sm shadow-xl shadow-blue-950/20 space-y-6">
+        <div className="flex items-center gap-3 pb-2 border-b border-slate-800/80">
+          <span className="w-2.5 h-2.5 rounded-full bg-blue-400 animate-pulse" />
+          <h2 className="text-[15px] sm:text-[20px] font-bold text-white tracking-tight">
+            {editingGame ? "แก้ไขข้อมูลเกม" : "เพิ่มเกมใหม่"}
+          </h2>
+        </div>
         <GameForm
           key={editingId ?? "new"}
           initialGame={editingGame}
@@ -115,23 +132,41 @@ export default function GameExplorer({ initialGames = [] }: GameExplorerProps) {
         />
       </section>
 
-      {/* ค้นหาและคัดกรอง */}
-      <div style={{ display: "flex", gap: "12px", marginBottom: "20px" }}>
-        <input
-          type="search"
-          placeholder="ค้นหาชื่อเกม..."
-          value={keyword}
-          onChange={(e: ChangeEvent<HTMLInputElement>) =>
-            setKeyword(e.target.value)
-          }
-          style={{ flex: 1, padding: "8px" }}
-        />
+      {/* ค้นหา */}
+      <div className="flex flex-col sm:flex-row gap-4">
+        <div className="relative flex-1">
+          <span className="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-500">
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              />
+            </svg>
+          </span>
+          <input
+            type="search"
+            placeholder="ค้นหาชื่อเกม..."
+            value={keyword}
+            onChange={(e: ChangeEvent<HTMLInputElement>) =>
+              setKeyword(e.target.value)
+            }
+            className="w-full pl-10 pr-4 py-3 rounded-2xl bg-slate-900/90 border border-slate-800 text-slate-100 placeholder-slate-500 text-sm focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all shadow-inner"
+          />
+        </div>
+
         <select
           value={statusFilter}
           onChange={(e: ChangeEvent<HTMLSelectElement>) =>
             setStatusFilter(e.target.value)
           }
-          style={{ padding: "8px" }}
+          className="px-4 py-3 rounded-2xl bg-slate-900/90 border border-slate-800 text-slate-100 text-sm focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 cursor-pointer"
         >
           <option value="all">สถานะทั้งหมด</option>
           <option value="not-started">ยังไม่เริ่ม</option>
@@ -140,109 +175,108 @@ export default function GameExplorer({ initialGames = [] }: GameExplorerProps) {
         </select>
       </div>
 
-      {/* รายการเกม */}
-      <section style={{ display: "grid", gap: "12px" }}>
+      {/* การ์ดเกม */}
+      <section className="space-y-4">
         {visibleGames.length === 0 ? (
-          <p>ไม่พบรายการเกม</p>
+          <div className="text-center py-20 px-4 rounded-3xl border border-dashed border-slate-800 bg-slate-950/40 text-slate-500 text-sm">
+            ไม่พบเกมที่ค้นหา
+          </div>
         ) : (
           visibleGames.map((game) => (
             <article
               key={game.id}
-              style={{
-                border: "1px solid #e5e7eb",
-                padding: "16px",
-                borderRadius: "8px",
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
+              className="group p-6 rounded-3xl bg-slate-900/80 border border-slate-800 hover:border-blue-500/40 transition-all duration-200 backdrop-blur-sm flex flex-col lg:flex-row lg:items-center justify-between gap-6 shadow-sm"
             >
-              <div>
-                <h3 style={{ margin: "0 0 4px" }}>
+              <div className="space-y-3">
+                <div className="flex items-center gap-3 flex-wrap">
                   <Link
                     href={`/games/${game.id}`}
-                    style={{ color: "#2563eb", textDecoration: "none" }}
+                    className="text-[20px] font-bold text-white group-hover:text-blue-300 transition-colors"
                   >
                     {game.title}
                   </Link>
-                </h3>
-                <p style={{ margin: "2px 0", color: "#666" }}>
-                  {game.platform} | เวลาเล่นโดยประมาณ: {game.estimatedHours} ชม.
-                </p>
-                <div style={{ marginTop: "6px" }}>
-                  <label>สถานะ: </label>
-                  <select
-                    value={game.status}
-                    onChange={(e) =>
-                      handleQuickStatusChange(
-                        game.id,
-                        e.target.value as GameStatus,
-                      )
-                    }
+                  <span
+                    className={`text-[13px] px-3 py-1 rounded-full border font-medium inline-flex items-center gap-1.5 ${
+                      statusStyles[game.status].badge
+                    }`}
                   >
-                    <option value="not-started">ยังไม่เริ่ม</option>
-                    <option value="in-progress">กำลังเล่น</option>
-                    <option value="completed">เล่นจบแล้ว</option>
-                  </select>
+                    <span
+                      className={`w-1.5 h-1.5 rounded-full ${statusStyles[game.status].dot}`}
+                    />
+                    {statusStyles[game.status].label}
+                  </span>
+                </div>
+                <div className="flex items-center gap-4 text-[13px] text-slate-400">
+                  <span className="font-mono bg-blue-950/70 border border-blue-900/50 px-2.5 py-1 rounded-md text-blue-300">
+                    {game.platform}
+                  </span>
+                  <span>⏱ ประมาณ {game.estimatedHours} ชั่วโมง</span>
                 </div>
               </div>
+              <div className="flex flex-wrap items-center gap-3 self-start lg:self-center">
+                <div className="flex items-center gap-1 p-1 bg-slate-950/80 border border-slate-800 rounded-xl">
+                  {(
+                    ["not-started", "in-progress", "completed"] as GameStatus[]
+                  ).map((st) => {
+                    const isActive = game.status === st;
+                    return (
+                      <button
+                        key={st}
+                        type="button"
+                        onClick={() => handleQuickStatusChange(game.id, st)}
+                        className={`px-2.5 py-1.5 rounded-lg text-[13px] font-regualr transition-all cursor-pointer ${
+                          isActive
+                            ? statusStyles[st].activeBtn
+                            : "text-slate-400 hover:text-slate-200"
+                        }`}
+                      >
+                        {statusStyles[st].label}
+                      </button>
+                    );
+                  })}
+                </div>
 
-              <div style={{ display: "flex", gap: "8px" }}>
-                <button onClick={() => setEditingId(game.id)}>แก้ไข</button>
-                <button
-                  onClick={() => setConfirmDeleteId(game.id)}
-                  style={{ color: "red" }}
-                >
-                  ลบ
-                </button>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => setEditingId(game.id)}
+                    className="px-3.5 py-2 text-[13px] font-semibold text-amber-300 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 rounded-xl transition-all active:scale-95 cursor-pointer"
+                  >
+                    แก้ไข
+                  </button>
+                  <button
+                    onClick={() => setConfirmDeleteId(game.id)}
+                    className="px-3.5 py-2 text-[13px] font-semibold text-rose-300 bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 rounded-xl transition-all active:scale-95 cursor-pointer"
+                  >
+                    ลบ
+                  </button>
+                </div>
               </div>
             </article>
           ))
         )}
       </section>
 
-      {/* กล่องยืนยันการลบ */}
       {confirmDeleteId && (
-        <div
-          style={{
-            position: "fixed",
-            inset: 0,
-            backgroundColor: "rgba(0,0,0,0.5)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <div
-            style={{
-              background: "#fff",
-              padding: "24px",
-              borderRadius: "8px",
-              width: "320px",
-            }}
-          >
-            <h3>ยืนยันการลบเกม?</h3>
-            <p>คุณแน่ใจหรือไม่ว่าต้องการลบรายการนี้?</p>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "flex-end",
-                gap: "8px",
-                marginTop: "16px",
-              }}
-            >
-              <button onClick={() => setConfirmDeleteId(null)}>ยกเลิก</button>
+        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 max-w-sm w-full shadow-2xl space-y-5 animate-in fade-in zoom-in-95 duration-150">
+            <h3 className="text-[20px] font-bold text-white">
+              ยืนยันการลบเกม ?
+            </h3>
+            <p className="text-[15px] text-slate-400 leading-relaxed">
+              คุณแน่ใจหรือไม่ว่าต้องการลบรายการนี้ออกจากระบบการดำเนินการนี้ไม่สามารถเรียกคืนได้
+            </p>
+            <div className="flex justify-end gap-3 pt-2">
+              <button
+                onClick={() => setConfirmDeleteId(null)}
+                className="px-4 py-2.5 text-[15px] font-semibold text-slate-300 hover:bg-slate-800 rounded-xl transition-colors cursor-pointer"
+              >
+                ยกเลิก
+              </button>
               <button
                 onClick={handleExecuteDelete}
-                style={{
-                  background: "red",
-                  color: "white",
-                  border: "none",
-                  padding: "6px 12px",
-                  borderRadius: "4px",
-                }}
+                className="px-4 py-2.5 text-[15px] font-semibold text-white bg-rose-600 hover:bg-rose-500 rounded-xl transition-colors cursor-pointer shadow-md shadow-rose-600/20"
               >
-                ลบข้อมูล
+                ยืนยันการลบ
               </button>
             </div>
           </div>
